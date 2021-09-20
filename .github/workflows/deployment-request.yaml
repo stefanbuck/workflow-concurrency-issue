@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: git pull origin main
       - run: cat output.log
       - run: cat $GITHUB_EVENT_PATH | jq --raw-output '.client_payload.message' >> output.log
 
