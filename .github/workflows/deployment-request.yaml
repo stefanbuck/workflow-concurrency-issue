@@ -1,0 +1,22 @@
+name: Deployment Request
+concurrency: deploy-request
+on:
+  repository_dispatch:
+    types: [deployment_request]
+jobs:
+  deploy:
+    name: Trigger deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cat output.log
+      - run: cat $GITHUB_EVENT_PATH | jq --raw-output '.client_payload.message' >> output.log
+
+      - name: Commit 
+        shell: bash
+        run: |
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com" && \
+          git config --global user.name "${{ github.actor }}" && \
+          git add ./output.log && \
+          git commit -m 'Update file' && \
+          git push origin main
